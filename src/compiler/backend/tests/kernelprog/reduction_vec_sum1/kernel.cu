@@ -3,14 +3,6 @@
 
 extern "C" {
 
-__device__ float warp_reduce_sum(float val)
-{
-    for (int offset = 16; offset > 0; offset >>= 1)
-        val += __shfl_down_sync(0xffffffff, val, offset);
-    return val;
-}
-
-
 __device__ float shared_data_reduce_sum_v1(float shared_data[NUM_THREADS])
 {
     static_assert(NUM_THREADS % 32 == 0,

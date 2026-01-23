@@ -206,7 +206,6 @@ class LLVMCodeGenerator(object):
             )
 
         def gen_value(instr):
-            print(instr)
             self.declare_var(self.gen_type(instr.type), instr.dest)
             llvm_instr = getattr(self.builder, value_ops[instr.op])
             self.gen_symbol_store(
