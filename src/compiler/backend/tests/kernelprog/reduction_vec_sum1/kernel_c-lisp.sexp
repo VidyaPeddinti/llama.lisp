@@ -2,7 +2,7 @@
      (define ((llvm.nvvm.read.ptx.sreg.tid.x int)))
      (define ((llvm.nvvm.read.ptx.sreg.ctaid.x int)))
      (define ((llvm.nvvm.barrier0 void)))
-     (define-global (shared_data1 (arr 256 float)) (addrspace 3))
+     (define-global (shared_data (arr 256 float)) (addrspace 3))
      
      
      (define ((kernel void)
@@ -35,7 +35,7 @@
                     (if (lt offset num_ele_per_batch)
                     (set sum
                          (fadd sum (load (ptradd input_data offset))))))
-               (store (aptradd shared_data1 threadidx) sum)
+               (store (aptradd shared_data threadidx) sum)
                (call llvm.nvvm.barrier0)
                ((declare threadidx int)
                (set threadidx
@@ -45,13 +45,13 @@
                     (gt stride 0)
                     (set stride (div stride 2)))
                     (if (lt threadidx stride)
-                         (store (aptradd shared_data1 threadidx)
-                              (fadd (load (aptradd shared_data1 threadidx))
+                         (store (aptradd shared_data threadidx)
+                              (fadd (load (aptradd shared_data threadidx))
                                    (load (aptradd
-                                             shared_data1
+                                             shared_data
                                              (add threadidx stride))))))
                     (call llvm.nvvm.barrier0)))
-               (set block_sum (load (aptradd shared_data1 0)))
+               (set block_sum (load (aptradd shared_data 0)))
                (if (eq threadidx 0)
                (store (ptradd output_data block_idx) block_sum))
           (ret)))
