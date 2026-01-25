@@ -32,7 +32,7 @@ int main()
     CHECK_CU(cuCtxCreate(&context, 0, device));
 
     CUmodule module;
-    CHECK_CU(cuModuleLoad(&module, "kernel2.ptx"));
+    CHECK_CU(cuModuleLoad(&module, "kernel.ptx"));
 
     CUfunction kernel;
     CHECK_CU(cuModuleGetFunction(

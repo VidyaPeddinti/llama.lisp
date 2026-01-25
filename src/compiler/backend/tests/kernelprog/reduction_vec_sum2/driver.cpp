@@ -71,13 +71,7 @@ int main()
     CHECK_CU(cuMemcpyDtoH(h_output.data(), d_output,
                           batch_size * sizeof(float)));
     
-    if (h_output[1] == num_elements_per_batch) {
-            printf("%f", h_output[1]);
-        }
-
     for (size_t i = 0; i < batch_size; ++i){
-        
-
         assert(h_output[i] == num_elements_per_batch);
     }
 
