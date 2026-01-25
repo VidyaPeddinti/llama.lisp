@@ -10,9 +10,6 @@ __device__ float shared_data_reduce_sum_v2(float shared_data[NUM_WARPS])
  
     for (size_t i{0}; i < NUM_WARPS; ++i)
     {
-        // There will be no shared memory bank conflicts here.
-        // Because multiple threads in a warp address the same shared memory
-        // location, resulting in a broadcast.
         sum += shared_data[i];
     }
     return sum;
@@ -26,7 +23,6 @@ __device__ float warp_reduce_sum(float val)
     {
         val += __shfl_down_sync(FULL_MASK, val, offset);
     }
-    // Only the first thread in the warp will return the correct result.
     return val;
 }
 
@@ -66,7 +62,6 @@ __global__ void kernel(float* __restrict__ output_data,
 {
     static_assert(NUM_THREADS % 32 == 0,
                   "NUM_THREADS must be a multiple of 32");
-    // constexpr size_t NUM_WARPS{NUM_THREADS / 32};
     size_t const block_idx{blockIdx.x};
     size_t const thread_idx{threadIdx.x};
     __shared__ float shared_data[NUM_WARPS];

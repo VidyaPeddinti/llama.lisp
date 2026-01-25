@@ -38,7 +38,7 @@
              ;;  (set FULL_MASK #{0xffffffff}#)
               ;; (set FULL_MASK 4294967295)
                (set FULL_MASK -1)
-               (for ((set offset 16) (gt offset 0) (set offset (div offset 1)))
+               (for ((set offset 16) (gt offset 0) (set offset (div offset 2)))
                      (set sum (fadd sum (call llvm.nvvm.shfl.sync.down.f32 FULL_MASK sum offset 32))))
                (if (eq (rem (call llvm.nvvm.read.ptx.sreg.tid.x) 32) 0)
                     (store (aptradd shared_data (div (call llvm.nvvm.read.ptx.sreg.tid.x) 32)) sum))

@@ -32,7 +32,7 @@ int main()
     CHECK_CU(cuCtxCreate(&context, 0, device));
 
     CUmodule module;
-    CHECK_CU(cuModuleLoad(&module, "kernel_our.ptx"));
+    CHECK_CU(cuModuleLoad(&module, "kernel.ptx"));
 
     CUfunction kernel;
     CHECK_CU(cuModuleGetFunction(
@@ -70,9 +70,16 @@ int main()
 
     CHECK_CU(cuMemcpyDtoH(h_output.data(), d_output,
                           batch_size * sizeof(float)));
+    
+    if (h_output[1] == num_elements_per_batch) {
+            printf("%f", h_output[1]);
+        }
 
-    for (size_t i = 0; i < batch_size; ++i)
+    for (size_t i = 0; i < batch_size; ++i){
+        
+
         assert(h_output[i] == num_elements_per_batch);
+    }
 
     std::cout << "SUCCESS: All results correct\n";
 
