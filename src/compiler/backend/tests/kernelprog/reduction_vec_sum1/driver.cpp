@@ -78,11 +78,10 @@ int main()
     CHECK_CU(cuDeviceGetAttribute(&busWidthBits, CU_DEVICE_ATTRIBUTE_GLOBAL_MEMORY_BUS_WIDTH, device));
     float const peak_bandwidth{static_cast<float>(2.0f * memClockKHz * (busWidthBits / 8) / 1.0e6)};
     std::cout << "Peak Bandwidth: " << peak_bandwidth << " GB/s" << std::endl;
-
     std::cout << "Batch Size: " << batch_size << std::endl;
     std::cout << "Number of Elements Per Batch: " << num_elements_per_batch<< std::endl;
 
-    // is the kernel working fine:
+    // Kernel results verification:
     CHECK_CU(cuCtxCreate(&context, 0, device));
     CHECK_CU(cuModuleLoad(&module, "kernel.ptx"));
     CHECK_CU(cuModuleGetFunction(&kernel, module, "kernel"));
@@ -128,8 +127,7 @@ int main()
     };
 
     float avg_latency_ms = measure_performance<void>(bound_launch, stream, 50, 20);
-    // std::cout << "Average kernel launch + execution time: " << avg_latency_ms << " ms (over 50 repeats)\n";
-
+ 
     // Effective Bandwidth = (Bytes Read + Bytes Written) / Time
     size_t total_bytes_moved = (total_elements + batch_size) * sizeof(float);
     float eff_bandwidth = (total_bytes_moved * 1e-6f) / avg_latency_ms;
